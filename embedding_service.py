@@ -2,6 +2,10 @@ import logging
 from sentence_transformers import SentenceTransformer
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from pydantic import BaseModel
+
+class EmbeddingRequest(BaseModel):
+    text: str
 
 logger = logging.getLogger(__name__)
 
@@ -23,13 +27,13 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 @app.post("/embedding")
-async def generate_embedding(text: str):
+async def generate_embedding(request: EmbeddingRequest):
     """生成文本嵌入向量"""
     if app.state.embedding_model is None:
         return [0.0] * app.state.embedding_dim
     
     try:
-        embedding = app.state.embedding_model.encode(text)
+        embedding = app.state.embedding_model.encode(request.text)
         return embedding.tolist()
     except Exception as e:
         logger.error(f"Failed to generate embedding: {e}")
