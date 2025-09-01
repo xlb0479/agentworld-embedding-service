@@ -98,3 +98,5 @@ playwright-report/
 test-results/
 
 app.log
+
+cache

@@ -1,6 +1,6 @@
 services:
   embedding-service:
-    build: .
+    image: embedding_service:latest
     ports:
       - "8888:8888"
     environment:
