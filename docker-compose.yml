@@ -1,0 +1,16 @@
+services:
+  embedding-service:
+    build: .
+    ports:
+      - "8888:8888"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TRANSFORMERS_CACHE=/app/cache
+    volumes:
+      - ./cache:/app/cache  # 缓存模型文件
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
